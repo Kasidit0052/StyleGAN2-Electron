@@ -1,4 +1,4 @@
-# StyleGAN2_Electron
+# StyleGAN2-Electron
 
 ![alt text](https://github.com/Kasidit0052/StyleGAN2_Electron/blob/main/Screen%20Shot.png)
 <p align="center">An Intuitive Approach to inference StyleGAN2</p>
