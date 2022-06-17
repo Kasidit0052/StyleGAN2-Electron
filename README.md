@@ -5,15 +5,22 @@
 
 ## How to run ? ##
 *  Create a python virtual environment using anaconda (Tested on python 3.7.3)
-
-*  pip install pip install -r requirements.txt file in stylegan2_pytorch (in your created virtual environment)
+*  run requirement.txt for stylegan2_pytorch (in your created virtual environment)
+   ```
+   pip install pip install -r requirements.txt 
+   ```
 
 *  Download and Convert Pretrained Model 
     *  Download Pretrained StyleGAN2 Model (we will use GWERN StyleGAN2 pretrained model)
-    *  execute  [ run_convert_from_tf.py --input="Path/To/PKL_MODEL"  --output="stylegan2_pytorch/pretrained_model" ] from /stylegan2_pytorch directory
+    *  Convert StyleGAN2 tf pretrained model to pytorch using script in ./stylegan2_pytorch directory
+       ```
+       run_convert_from_tf.py --input="Path/To/PKL_MODEL"  --output="stylegan2_pytorch/pretrained_model" 
+       ```
     
 *  Setup python path in /electron-react-boilerplate/src/main.dev.ts 
-    *  Example => PythonShell.run('socket_inference.py',{scriptPath: StyleGANPATH ,pythonPath: YOURPYTHONPATH })
+   ```
+    PythonShell.run('socket_inference.py',{scriptPath: StyleGANPATH ,pythonPath: YOURPYTHONPATH })
+   ```
   
 *  Yarn install
 
