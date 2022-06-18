@@ -1,6 +1,6 @@
 # StyleGAN2-Electron
 
-![alt text](https://github.com/Kasidit0052/StyleGAN2_Electron/blob/main/Screen%20Shot.png)
+![alt text](https://github.com/Kasidit0052/StyleGAN2_Electron/blob/main/application-sample.png)
 <p align="center">An Intuitive Approach to inference StyleGAN2</p>
 
 ## How to run ? ##
@@ -11,24 +11,23 @@
    ```
 
 *  Download and Convert Pretrained Model 
-    *  Download Pretrained StyleGAN2 Model (we will use GWERN StyleGAN2 pretrained model)
-    *  Convert StyleGAN2 tf pretrained model to pytorch using script in ./stylegan2_pytorch directory
+    *  Download Pretrained StyleGAN2 Model (this project use model and dlatents from GWERN StyleGAN2 pretrained model)
+    *  Convert StyleGAN2 tf pretrained model to pytorch using script in ./stylegan2_pytorch directory/pretrained_model
        ```
        run_convert_from_tf.py --input="Path/To/PKL_MODEL"  --output="stylegan2_pytorch/pretrained_model" 
        ```
-    
-*  Setup python path in /electron-react-boilerplate/src/main.dev.ts 
-   ```
-    PythonShell.run('socket_inference.py',{scriptPath: StyleGANPATH ,pythonPath: YOURPYTHONPATH })
-   ```
   
-*  Yarn install
-
-*  Yarn start
+*  Install packages
+   ```
+   Yarn install and Yarn start
+   ```
+   
+*  Setup python path using interface in application
 
 ## How to Deploy ? ##
-
-*  Yarn Package
+   ```
+   Yarn Package
+   ```
 
 ## StyleGAN2 Tutorial Notebook for those who want to explore StyleGAN2 ##
 There is a tutorial notebook in /stylegan2_pytorch folder which demostrate a basic function to Generate and Interpolate Image 
