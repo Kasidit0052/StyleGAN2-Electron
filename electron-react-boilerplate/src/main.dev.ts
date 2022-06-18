@@ -13,25 +13,24 @@ import 'regenerator-runtime/runtime';
 import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
-import {PythonShell} from 'python-shell';
+import { PythonShell } from 'python-shell';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 
-// Import Socketio Related Libraries
+// Import Related Libraries
 const express = require('express');
 const _app = express();
 const server = require('http').Server(_app);
 const io = require('socket.io')(server);
+const Store = require('electron-store');
+const store = new Store();
 
 // Import Development Libraries
 const isDev = require('electron-is-dev');
 
 // On Socketio Client Connected
 io.on('connection', (socket) => {
-  
-  // Initialize image when app opened
   io.emit('create_new_image');
-  console.log('a user connected');
 
   // Event on user disconnect
   socket.on('disconnect', () => {
@@ -40,10 +39,9 @@ io.on('connection', (socket) => {
 
   // Pytorch Interface Event Listener
   socket.on('inference image', (msg) => {
-    console.log('image_name: ' + msg.image_name);
-    mainWindow.webContents.send('inference image', msg);
+    mainWindow.webContents.send('Inference Image', msg);
   });
-  
+
   // Event for initialize User Interface
   socket.on('Init Interface', (msg) => {
     mainWindow.webContents.send('Init Interface', msg);
@@ -109,8 +107,10 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728,
+    width: 1096,
+    height: 956,
+    minWidth: 1096,
+    minHeight: 956,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       nodeIntegration: true,
@@ -122,33 +122,6 @@ const createWindow = async () => {
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on('did-finish-load', () => {
-    console.log("finished loading");
-
-    if (isDev) {
-      // Running in Development Mode
-      const app_path = app.getAppPath().split("/");
-      const base_app_path = app_path.slice(0, app_path.length-1).join("/");
-      const StyleGANPATH = path.join(base_app_path, 'stylegan2_pytorch');
-      process.chdir(StyleGANPATH);
-
-      // Running Python Backended Script !!!!!
-      var pyshell = PythonShell.run('socket_inference.py',{scriptPath: StyleGANPATH ,pythonPath: '/Users/webkasidit/opt/anaconda3/envs/StyleGAN/bin/python' }, function (err, results) {
-        if (err) throw err;
-        console.log('Script Passes');
-      });
-      console.log('Running in development');
-    } else {
-      // Running in Production Mode
-      const StyleGANPATH = path.join(process.resourcesPath, 'stylegan2_pytorch');
-      process.chdir(StyleGANPATH);
-      // Running Python Backended Script !!!!!
-      var pyshell = PythonShell.run('socket_inference.py',{scriptPath: StyleGANPATH ,pythonPath: '/Users/webkasidit/opt/anaconda3/envs/StyleGAN/bin/python' }, function (err, results) {
-        if (err) throw err;
-        console.log('Script Passes');
-      });
-      console.log('Running in production');
-    }
-
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
@@ -158,6 +131,7 @@ const createWindow = async () => {
       mainWindow.show();
       mainWindow.focus();
     }
+    mainWindow.webContents.send('Get Python Path', store.get('python_path'));
   });
 
   mainWindow.on('closed', () => {
@@ -184,23 +158,53 @@ const createWindow = async () => {
 
 // Listening Creation Event from Render process
 ipcMain.on("creation_event", () => {
-  console.log('Generate New Samples');
   // Send Command through Socketio 
   io.emit('create_new_image');
-})
+});
 
 // Listening Modification Event from Render Process
-ipcMain.on("modification_event", (event,args) => {
+ipcMain.on("modification_event", (event, args) => {
   // Send Command through Socketio 
-  io.emit('modify_current_image',args);
-})
+  io.emit('modify_current_image', args);
+});
+
+// Listening Python path initialization event from Render Process
+ipcMain.on("pythonpath_init", (event, args) => {
+  // Set Python Path in persistant storage
+  store.set('python_path', args);
+  if (isDev) {
+    // Running in Development Mode
+    const app_path = app.getAppPath().split("/");
+    const base_app_path = app_path.slice(0, app_path.length - 1).join("/");
+    const StyleGANPATH = path.join(base_app_path, 'stylegan2_pytorch');
+    process.chdir(StyleGANPATH);
+    // Running Python Backended Script
+    PythonShell.run('socket_inference.py', { scriptPath: StyleGANPATH, pythonPath: store.get('python_path') }, function (err, results) {
+      if (err) throw err;
+    });
+    mainWindow.webContents.send('Init Ready', true);
+    console.log('Running in development');
+  } else {
+    // Running in Production Mode
+    const StyleGANPATH = path.join(process.resourcesPath, 'stylegan2_pytorch');
+    process.chdir(StyleGANPATH);
+    // Running Python Backended Script 
+    PythonShell.run('socket_inference.py', { scriptPath: StyleGANPATH, pythonPath: store.get('python_path') }, function (err, results) {
+      if (err) throw err;
+    });
+    mainWindow.webContents.send('Init Ready', true);
+    console.log('Running in production');
+  }
+});
+
+// Second Layer Exception Caughting
+process.on('uncaughtException', function (error) {
+  mainWindow.webContents.send('Init Ready', false);
+});
 
 app.on('window-all-closed', () => {
-  // Respect the OSX convention of having the application in memory even
-  // after all windows have been closed
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+  app.quit();
+
 });
 
 app.whenReady().then(createWindow).catch(console.log);

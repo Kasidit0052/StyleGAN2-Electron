@@ -1,6 +1,6 @@
 {
   "name": "electron-react-boilerplate",
-  "productName": "ElectronReact",
+  "productName": "StyleGAN Electron",
   "description": "Electron application boilerplate based on React, React Router, Webpack, React Fast Refresh for rapid application development",
   "scripts": {
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
@@ -30,7 +30,7 @@
     ]
   },
   "build": {
-    "productName": "ElectronReact",
+    "productName": "StyleGAN Electron",
     "appId": "org.erb.ElectronReact",
     "files": [
       "dist/",
@@ -253,6 +253,7 @@
     "electron-debug": "^3.1.0",
     "electron-is-dev": "^1.2.0",
     "electron-log": "^4.2.4",
+    "electron-store": "^8.0.2",
     "electron-updater": "^4.3.4",
     "express": "^4.17.1",
     "history": "^5.0.0",
