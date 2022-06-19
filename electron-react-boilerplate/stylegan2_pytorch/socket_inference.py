@@ -46,7 +46,7 @@ def generate_image():
     print('Generating New Images')
     input_seed = np.random.randint(10000000)
     input_zs = torch.stack([torch.from_numpy(np.random.RandomState(input_seed).randn(G.latent_size))])
-    new_sample = latent_direction_Interface(G, input_zs, 0.9, {})
+    new_sample = latent_direction_Interface(G, input_zs, 0.5, {})
     data_url = pil2datauri(new_sample[0])
     track_latent_zs = {'image_name':input_seed, 'input_latent_space':input_zs}
     sio.emit('inference image',{ 'image_name': "seed_number_{}".format(input_seed), 'image_data': data_url})
@@ -54,7 +54,7 @@ def generate_image():
 @sio.on('modify_current_image')
 def modify_image(data):
     print("Modify Current Images")
-    modify_sample = latent_direction_Interface(G, track_latent_zs['input_latent_space'], 0.9,data)
+    modify_sample = latent_direction_Interface(G, track_latent_zs['input_latent_space'], 0.5,data)
     data_url = pil2datauri(modify_sample[0])
     sio.emit('inference image', { 'image_name': "seed_number_{}".format(track_latent_zs['image_name']), 'image_data': data_url})
 
