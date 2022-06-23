@@ -97,7 +97,7 @@ def latent_direction_Interface( G, zspace_input, truncation_psi, input_param):
     
     if(len(input_param)>0):
         for param_name, param_value in input_param.items():
-            dlatents_mod += tag_directions[param_name] * param_value / tag_len[param_name] * 25.0
+            dlatents_mod += tag_directions[param_name] * param_value / tag_len[param_name] * 20.0
 
     progress = utils.ProgressWriter(1)
     progress.write('Generating images...', step=False)

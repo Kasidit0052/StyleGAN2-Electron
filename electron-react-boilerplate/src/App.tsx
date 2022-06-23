@@ -143,7 +143,7 @@ const MainFrame = () => {
                     chunk.map((item) => (
                       <Fragment>
                         <td style={{ width: "20%" }}>
-                          <PrettoSlider disabled={!isSetupReady} valueLabelDisplay="auto" aria-label="pretto slider" defaultValue={0} step={0.10} min={-5.0} max={5.0} onChangeCommitted={(event, value) => handleInputChange(event, value, { item })} />
+                          <PrettoSlider disabled={!isSetupReady} valueLabelDisplay="auto" aria-label="pretto slider" defaultValue={0.10} step={0.10} min={0.0} max={1.0} onChangeCommitted={(event, value) => handleInputChange(event, value, { item })} />
                         </td>
                         <td>
                           <a style={{ color: "black" }}>{item}</a>
