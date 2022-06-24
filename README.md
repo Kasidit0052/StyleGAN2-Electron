@@ -5,14 +5,14 @@
 
 ## How to run ? ##
 *  Create a python virtual environment using anaconda (Tested on python 3.7.3)
-*  run requirement.txt for stylegan2_pytorch (in your created virtual environment)
+*  Run requirement.txt for stylegan2_pytorch (in your created virtual environment)
    ```
    pip install pip install -r requirements.txt 
    ```
 
 *  Download and Convert Pretrained Model 
     *  Download Pretrained StyleGAN2 Model (this project use model and dlatents from GWERN StyleGAN2 pretrained model)
-    *  Convert StyleGAN2 tf pretrained model to pytorch using script in ./stylegan2_pytorch directory/pretrained_model
+    *  Convert StyleGAN2 tf pretrained model to pytorch using script in ./stylegan2_pytorch/pretrained_model
        ```
        run_convert_from_tf.py --input="Path/To/PKL_MODEL"  --output="stylegan2_pytorch/pretrained_model" 
        ```
@@ -24,6 +24,9 @@
    
 *  Setup python path using interface in application
 
+## If I don't want to use stylegan2 anime model, how to Update your own latent direction ? ##
+   You can modify directional latent at   `stylegan2_pytorch/pretrained_model/modded_dlatents/tag_dirs_cont.pkl`
+   
 ## How to Deploy ? ##
    ```
    Yarn Package
